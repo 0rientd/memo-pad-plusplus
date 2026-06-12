@@ -9,7 +9,8 @@ LDFLAGS = \
 	-lSDL2_ttf
 
 SRC = \
-	src/main.cpp
+	src/main.cpp \
+	src/ui/text.cpp
 
 OUT = bin/memo-pad-cpp
 

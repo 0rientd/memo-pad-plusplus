@@ -1,37 +1,17 @@
-#include <iostream>
-#include <vector>
+#include "ui/text.hpp"
+
 #include <string>
+#include <vector>
+#include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
 using namespace std;
 
-void renderTextInput(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y) {
-  SDL_Color color = {255, 255, 255, 255}; // white
-  SDL_Surface* surface = TTF_RenderText_Blended(font, text, color);
-
-  if (!surface) {
-    cerr << "TTF_RenderText_Blended Error: " << TTF_GetError() << std::endl;
-    return;
-  }
-
-  SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-  if (!texture) {
-    cerr << "SDL_CreateTextureFromSurface Error: " << SDL_GetError() << std::endl;
-    SDL_FreeSurface(surface);
-    return;
-  }
-
-  SDL_Rect dest = { x, y, surface->w, surface->h };
-
-  SDL_RenderCopy(renderer, texture, NULL, &dest);
-
-  SDL_FreeSurface(surface);
-  SDL_DestroyTexture(texture);
-}
-
 int main() {
+  bool running = true;
+  vector<string> inputText = { "" };
+
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
     
@@ -74,37 +54,34 @@ int main() {
 
   SDL_StartTextInput();
 
-  bool running = true;
-  vector<string> inputText;
-  inputText.push_back("");
-
   while (running) {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
-        inputText.push_back("");
- //       default_y_output += 20;
-      } else if (event.type == SDL_TEXTINPUT) {
+      if (event.type == SDL_TEXTINPUT) {
         inputText.back() += event.text.text;
-        // cout << "Input: " << inputText << endl;
+
+      } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
+        inputText.push_back("");
+
       } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && inputText.size()) {
-
-        if (!inputText.empty() &&
-            !inputText.back().empty())
-        {
+        if (!inputText.back().empty()) {
             inputText.back().pop_back();
+        } else {
+          if (inputText.size() > 1) {
+            inputText.pop_back();
+          }
         }
-
-      } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && !inputText.size()) {
-        cout << "Tentando apagar ultima linha.. Era para ir para a linha de cima." << endl;
-
+      } else if (event.type == SDL_KEYDOWN ) {
+        if (event.key.keysym.sym == SDLK_n && (event.key.keysym.mod & KMOD_CTRL)) {
+          inputText.clear();
+          inputText.push_back("");
+        }
       } else if (event.type == SDL_QUIT) {
-          running = false;
+        running = false;
       }
     }
-
-    SDL_SetRenderDrawColor(renderer, 20, 20, 20, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 240, 217, 220);
     SDL_RenderClear(renderer);
     
     int y = 20;
