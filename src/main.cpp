@@ -1,4 +1,5 @@
 #include "ui/text.hpp"
+#include "ui/button.hpp"
 
 #include <string>
 #include <vector>
@@ -99,6 +100,8 @@ int main() {
 
       y += 25;
     }
+
+    renderButton(renderer, 75, 500, 25, 100);
 
     SDL_RenderPresent(renderer);
   }
