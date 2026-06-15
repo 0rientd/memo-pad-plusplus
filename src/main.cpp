@@ -104,8 +104,9 @@ int main() {
     }
 
     renderButton(renderer, font, "ctrl+n", 35, 400, 25, 100);
-    renderButton(renderer, font, "ctrl+v", 145, 400, 25, 100);
-    renderButton(renderer, font, "ctrl+q", 255, 400, 25, 100);
+    renderButton(renderer, font, "ctrl+c", 145, 400, 25, 100);
+    renderButton(renderer, font, "ctrl+v", 255, 400, 25, 100);
+    renderButton(renderer, font, "ctrl+q", 365, 400, 25, 100);
 
     SDL_RenderPresent(renderer);
   }
