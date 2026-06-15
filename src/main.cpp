@@ -36,7 +36,7 @@ int main() {
     return 1;
   }
 
-  SDL_Window* window = SDL_CreateWindow("Memo-Pad++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 450, 600, SDL_WINDOW_SHOWN);
+  SDL_Window* window = SDL_CreateWindow("Memo-Pad++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 450, SDL_WINDOW_SHOWN);
   if (!window) {
     std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 
@@ -77,6 +77,8 @@ int main() {
         if (event.key.keysym.sym == SDLK_n && (event.key.keysym.mod & KMOD_CTRL)) {
           inputText.clear();
           inputText.push_back("");
+        } else if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_CTRL)) {
+          running = false;
         }
       } else if (event.type == SDL_QUIT) {
         running = false;
@@ -101,7 +103,9 @@ int main() {
       y += 25;
     }
 
-    renderButton(renderer, font, "Teste", 75, 500, 25, 100);
+    renderButton(renderer, font, "ctrl+n", 35, 400, 25, 100);
+    renderButton(renderer, font, "ctrl+v", 145, 400, 25, 100);
+    renderButton(renderer, font, "ctrl+q", 255, 400, 25, 100);
 
     SDL_RenderPresent(renderer);
   }
