@@ -1,7 +1,16 @@
-#include <SDL2/SDL.h>
+#include "text.hpp"
 
-int renderButton(SDL_Renderer* renderer, int x, int y, int h, int w) {
-  SDL_SetRenderDrawColor( renderer, 51, 61, 109, 230 ); // Draw in solid blue
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
+int position_x(int x, int y) {
+  int position = 0;
+
+  return position;
+}
+
+int renderButton(SDL_Renderer* renderer, TTF_Font* font, const char* text, int x, int y, int h, int w) {
+  SDL_SetRenderDrawColor(renderer, 255, 207, 149, 200);
 
   SDL_Rect r;
   r.x = x;
@@ -9,5 +18,8 @@ int renderButton(SDL_Renderer* renderer, int x, int y, int h, int w) {
   r.h = h;
   r.w = w;
 
-  return SDL_RenderFillRect(renderer, &r);
+  SDL_RenderFillRect(renderer, &r);
+
+  renderTextInput(renderer, font, text, x+(h/4), y);
+  return 0;
 }

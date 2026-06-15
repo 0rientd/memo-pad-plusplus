@@ -101,7 +101,7 @@ int main() {
       y += 25;
     }
 
-    renderButton(renderer, 75, 500, 25, 100);
+    renderButton(renderer, font, "Teste", 75, 500, 25, 100);
 
     SDL_RenderPresent(renderer);
   }
