@@ -6,6 +6,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_clipboard.h>
 
 using namespace std;
 
@@ -36,7 +37,7 @@ int main() {
     return 1;
   }
 
-  SDL_Window* window = SDL_CreateWindow("Memo-Pad++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 450, SDL_WINDOW_SHOWN);
+  SDL_Window* window = SDL_CreateWindow("Memo-Pad++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 450, SDL_WINDOW_SHOWN);
   if (!window) {
     std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 
@@ -79,6 +80,19 @@ int main() {
           inputText.push_back("");
         } else if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_CTRL)) {
           running = false;
+        } else if (event.key.keysym.sym == SDLK_c && (event.key.keysym.mod & KMOD_CTRL)) {
+          string text_to_clipboard;
+
+          for (long unsigned int i = 0; i < inputText.size(); i++) {
+            text_to_clipboard += inputText[i] + "\n";
+          }
+
+          int result = SDL_SetClipboardText(text_to_clipboard.c_str());
+          if (result != 0) {
+            cout << "Error in clipboard" << endl;
+          }
+        } else if (event.key.keysym.sym == SDLK_v && (event.key.keysym.mod & KMOD_CTRL)) {
+          inputText.push_back(SDL_GetClipboardText());
         }
       } else if (event.type == SDL_QUIT) {
         running = false;
