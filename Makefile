@@ -11,7 +11,7 @@ LDFLAGS = \
 SRC = \
 	src/main.cpp \
 	src/ui/text.cpp \
-	src/ui/button.cpp
+	src/ui/button.cpp \
 
 OUT = bin/memo-pad-cpp
 

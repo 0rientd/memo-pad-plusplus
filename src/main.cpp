@@ -10,6 +10,44 @@
 
 using namespace std;
 
+void copyAllStrings(vector<string> inputText) {
+  string text_to_clipboard;
+
+  for (long unsigned int i = 0; i < inputText.size(); i++) {
+    text_to_clipboard += inputText[i] + "\n";
+  }
+
+  int result = SDL_SetClipboardText(text_to_clipboard.c_str());
+  if (result != 0) {
+    cout << "Error in clipboard" << endl;
+  }
+}
+
+char * getAllClipboardStrings() {
+  // to-do get the strings with new lines
+  return SDL_GetClipboardText();
+}
+
+vector<string> clearAllStrings(vector<string> inputText) {
+  inputText.clear();
+  inputText.push_back("");
+
+  return inputText;
+}
+
+vector<string> clearLastInput(vector<string> inputText) {
+  if (!inputText.back().empty()) {
+      inputText.back().pop_back();
+  } else {
+    if (inputText.size() > 1) {
+      inputText.pop_back();
+    }
+  }
+
+  return inputText;
+}
+
+
 int main() {
   bool running = true;
   vector<string> inputText = { "" };
@@ -57,42 +95,42 @@ int main() {
   SDL_StartTextInput();
 
   while (running) {
+    int y = 20;
+
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_TEXTINPUT) {
         inputText.back() += event.text.text;
 
+        if (calcLineLength(renderer, font, inputText.back().c_str()) > 430) {
+          std::string lastVector = inputText.back();
+
+          char lastCharacter = lastVector.back();
+
+          inputText.back().pop_back();
+          inputText.push_back(std::string(1, lastCharacter));
+        }
+
       } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
         inputText.push_back("");
 
       } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_BACKSPACE && inputText.size()) {
-        if (!inputText.back().empty()) {
-            inputText.back().pop_back();
-        } else {
-          if (inputText.size() > 1) {
-            inputText.pop_back();
-          }
-        }
+        inputText = clearLastInput(inputText);
+
       } else if (event.type == SDL_KEYDOWN ) {
         if (event.key.keysym.sym == SDLK_n && (event.key.keysym.mod & KMOD_CTRL)) {
-          inputText.clear();
-          inputText.push_back("");
+          inputText = clearAllStrings(inputText);
+
         } else if (event.key.keysym.sym == SDLK_q && (event.key.keysym.mod & KMOD_CTRL)) {
           running = false;
+
         } else if (event.key.keysym.sym == SDLK_c && (event.key.keysym.mod & KMOD_CTRL)) {
-          string text_to_clipboard;
+          copyAllStrings(inputText);   
 
-          for (long unsigned int i = 0; i < inputText.size(); i++) {
-            text_to_clipboard += inputText[i] + "\n";
-          }
-
-          int result = SDL_SetClipboardText(text_to_clipboard.c_str());
-          if (result != 0) {
-            cout << "Error in clipboard" << endl;
-          }
         } else if (event.key.keysym.sym == SDLK_v && (event.key.keysym.mod & KMOD_CTRL)) {
-          inputText.push_back(SDL_GetClipboardText());
+          inputText.push_back(getAllClipboardStrings());
+
         }
       } else if (event.type == SDL_QUIT) {
         running = false;
@@ -100,17 +138,15 @@ int main() {
     }
     SDL_SetRenderDrawColor(renderer, 255, 240, 217, 220);
     SDL_RenderClear(renderer);
-    
-    int y = 20;
 
     for (const auto& line : inputText) {
       if (!line.empty()) {
         renderTextInput(
-            renderer,
-            font,
-            line.c_str(),
-            10,
-            y
+          renderer,
+          font,
+          line.c_str(),
+          10,
+          y
         );
       }
 
