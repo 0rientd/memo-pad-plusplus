@@ -5,6 +5,10 @@
 using namespace std;
 
 int calcLineLength(SDL_Renderer* renderer, TTF_Font* font, const char* text) {
+  if (!text || !*text) {
+    return 0;
+  }
+
   SDL_Color color = {51, 61, 109, 255};
 
   SDL_Surface* surface2 = TTF_RenderText_Blended(font, text, color);

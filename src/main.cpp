@@ -47,6 +47,23 @@ vector<string> clearLastInput(vector<string> inputText) {
   return inputText;
 }
 
+void renderCurrentChar(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, const char* text, int y) {
+  int lineLength = calcLineLength(renderer, font, text);
+
+
+  SDL_SetRenderDrawColor(renderer, 51, 61, 109, 200);
+  SDL_Rect r;
+  r.x = lineLength + 10;
+  r.y = y + 3;
+  r.h = 18;
+  r.w = 10;
+
+  if (lineLength > windowWidth - 20) {
+    return;
+  }
+
+  SDL_RenderFillRect(renderer, &r);
+}
 
 int main() {
   bool running = true;
@@ -145,6 +162,8 @@ int main() {
     SDL_RenderClear(renderer);
 
     for (const auto& line : inputText) {
+      renderCurrentChar(renderer, font, windowWidth, line.c_str(), coordinate_y);
+
       if (!line.empty()) {
         renderTextInput(
           renderer,
