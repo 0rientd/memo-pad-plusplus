@@ -51,6 +51,8 @@ vector<string> clearLastInput(vector<string> inputText) {
 int main() {
   bool running = true;
   vector<string> inputText = { "" };
+  int windowWidth = 500;
+  int windowHeight = 450;
 
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
@@ -75,7 +77,7 @@ int main() {
     return 1;
   }
 
-  SDL_Window* window = SDL_CreateWindow("Memo-Pad++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 450, SDL_WINDOW_SHOWN);
+  SDL_Window* window = SDL_CreateWindow("Memo-Pad++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
   if (!window) {
     std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 
@@ -95,15 +97,17 @@ int main() {
   SDL_StartTextInput();
 
   while (running) {
-    int y = 20;
-
     SDL_Event event;
 
+    int coordinate_y = 20;
+
     while (SDL_PollEvent(&event)) {
+      SDL_GetRendererOutputSize(renderer, &windowWidth, &windowHeight);
+
       if (event.type == SDL_TEXTINPUT) {
         inputText.back() += event.text.text;
 
-        if (calcLineLength(renderer, font, inputText.back().c_str()) > 430) {
+        if (calcLineLength(renderer, font, inputText.back().c_str()) > windowWidth - 10) {
           std::string lastVector = inputText.back();
 
           char lastCharacter = lastVector.back();
@@ -136,6 +140,7 @@ int main() {
         running = false;
       }
     }
+
     SDL_SetRenderDrawColor(renderer, 255, 240, 217, 220);
     SDL_RenderClear(renderer);
 
@@ -146,17 +151,17 @@ int main() {
           font,
           line.c_str(),
           10,
-          y
+          coordinate_y 
         );
       }
 
-      y += 25;
+      coordinate_y += 25;
     }
 
-    renderButton(renderer, font, "ctrl+n", 35, 400, 25, 100);
-    renderButton(renderer, font, "ctrl+c", 145, 400, 25, 100);
-    renderButton(renderer, font, "ctrl+v", 255, 400, 25, 100);
-    renderButton(renderer, font, "ctrl+q", 365, 400, 25, 100);
+    renderButton(renderer, font, "ctrl+n", (windowWidth - 500) +  35 - (windowWidth - 500) / 2, windowHeight - 50, 25, 100);
+    renderButton(renderer, font, "ctrl+c", (windowWidth - 500) + 145 - (windowWidth - 500) / 2, windowHeight - 50, 25, 100);
+    renderButton(renderer, font, "ctrl+v", (windowWidth - 500) + 255 - (windowWidth - 500) / 2, windowHeight - 50, 25, 100);
+    renderButton(renderer, font, "ctrl+q", (windowWidth - 500) + 365 - (windowWidth - 500) / 2, windowHeight - 50, 25, 100);
 
     SDL_RenderPresent(renderer);
   }
