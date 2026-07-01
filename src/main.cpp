@@ -47,7 +47,7 @@ vector<string> clearLastInput(vector<string> inputText) {
   return inputText;
 }
 
-void renderCurrentChar(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, const char* text, int y) {
+void renderCursor(SDL_Renderer* renderer, TTF_Font* font, int windowWidth, const char* text, int y) {
   int lineLength = calcLineLength(renderer, font, text);
 
 
@@ -117,6 +117,7 @@ int main() {
     SDL_Event event;
 
     int coordinate_y = 20;
+    unsigned int cursorIndex = 1;
 
     while (SDL_PollEvent(&event)) {
       SDL_GetRendererOutputSize(renderer, &windowWidth, &windowHeight);
@@ -124,13 +125,8 @@ int main() {
       if (event.type == SDL_TEXTINPUT) {
         inputText.back() += event.text.text;
 
-        if (calcLineLength(renderer, font, inputText.back().c_str()) > windowWidth - 10) {
-          std::string lastVector = inputText.back();
-
-          char lastCharacter = lastVector.back();
-
-          inputText.back().pop_back();
-          inputText.push_back(std::string(1, lastCharacter));
+        if (calcLineLength(renderer, font, inputText.back().c_str()) >= windowWidth - 20) {
+          inputText.push_back("");
         }
 
       } else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RETURN) {
@@ -161,10 +157,9 @@ int main() {
     SDL_SetRenderDrawColor(renderer, 255, 240, 217, 220);
     SDL_RenderClear(renderer);
 
-    unsigned int cursorIndex = 1;
     for (const auto& line : inputText) {
       if(cursorIndex == inputText.size()) {
-        renderCurrentChar(renderer, font, windowWidth, line.c_str(), coordinate_y);
+        renderCursor(renderer, font, windowWidth, line.c_str(), coordinate_y);
       }
 
       if (!line.empty()) {
