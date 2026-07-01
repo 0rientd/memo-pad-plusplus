@@ -17,14 +17,15 @@ The app uses SDL2 for rendering and TTF for font rendering. Text is stored in a 
 ### 🚀 Compilation & Usage
 
 1. **Prerequisites**
-   - Install SDL2 and SDL2_ttf development libraries:
+   - Install SDL2 and SDL2_ttf development libraries (Ubuntu) and CMake:
      ```bash
-     sudo apt update && sudo apt install libsdl2-dev libsdl2-ttf-dev
+     sudo apt update && sudo apt install libsdl2-dev libsdl2-ttf-dev cmake
      ```
 
 2. **Compile**
    Run the Makefile to build the application:
    ```bash
+   cmake .
    make
    ```
 
@@ -35,11 +36,10 @@ The app uses SDL2 for rendering and TTF for font rendering. Text is stored in a 
    ```
 
 ### 📝 Tips
-- Press `Ctrl+Enter` to insert a new line.
+- Press `Enter` to insert a new line.
 - Use `Ctrl+C` and `Ctrl+V` to copy/paste text.
-- The app automatically resizes buttons based on window dimensions.
+- The app automatically align buttons based on window dimensions.
 - Text is rendered with smooth cursor highlighting.
 
 > ⚠️ This is a lightweight, educational project. For production use, consider additional features like file I/O or saving/loading.
 
-Made with ❤️ in C++ using SDL2!
