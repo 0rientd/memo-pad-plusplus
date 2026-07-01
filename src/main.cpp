@@ -161,8 +161,11 @@ int main() {
     SDL_SetRenderDrawColor(renderer, 255, 240, 217, 220);
     SDL_RenderClear(renderer);
 
+    unsigned int cursorIndex = 1;
     for (const auto& line : inputText) {
-      renderCurrentChar(renderer, font, windowWidth, line.c_str(), coordinate_y);
+      if(cursorIndex == inputText.size()) {
+        renderCurrentChar(renderer, font, windowWidth, line.c_str(), coordinate_y);
+      }
 
       if (!line.empty()) {
         renderTextInput(
@@ -175,6 +178,7 @@ int main() {
       }
 
       coordinate_y += 25;
+      cursorIndex++;
     }
 
     renderButton(renderer, font, "ctrl+n", (windowWidth - 500) +  35 - (windowWidth - 500) / 2, windowHeight - 50, 25, 100);
